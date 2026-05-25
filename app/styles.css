@@ -127,6 +127,11 @@ select {
   font-weight: 600;
 }
 
+.statusMessage {
+  min-height: 1.2em;
+  margin-bottom: 0;
+}
+
 .toggleRow {
   margin-top: 12px;
   display: flex;

@@ -17,12 +17,13 @@
       <section id="setupCard" class="card">
         <h2>Load Today&apos;s Program</h2>
         <p>
-          This app reads <strong>state/current-state.json</strong> and builds your live session from
+          This app reads the current training state and builds your live session from
           <strong>next_session</strong> and <strong>next_targets</strong>.
         </p>
         <div class="actions">
           <button id="autoLoadBtn" class="btn">Auto-load State File</button>
           <label class="btn secondary" for="stateFileInput">Choose State File</label>
+          <button id="saveStateBtn" class="btn secondary" disabled>Save Loaded State To Cloud</button>
           <input id="stateFileInput" type="file" accept="application/json" />
         </div>
         <label class="fieldLabel" for="betweenExerciseRest">Rest between exercises (seconds)</label>
@@ -122,7 +123,9 @@
           <button id="generateLogBtn" class="btn">Generate Log Markdown</button>
           <button id="downloadLogBtn" class="btn secondary" disabled>Download Log</button>
           <button id="copyLogBtn" class="btn secondary" disabled>Copy Log</button>
+          <button id="saveLogBtn" class="btn secondary" disabled>Save Log To Cloud</button>
         </div>
+        <p id="logSaveMessage" class="subtle statusMessage"></p>
 
         <label class="fieldLabel" for="logOutput">Log output</label>
         <textarea id="logOutput" rows="14" readonly></textarea>

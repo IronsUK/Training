@@ -10,6 +10,7 @@ This app gives live set-by-set workout guidance from the current training state.
 - runs rest timers between sets and between exercises
 - captures end-of-session feedback
 - generates markdown log output you can paste in chat or save under `logs/`
+- can save the loaded state and generated session log to cloud storage when the API is configured
 
 ## How to launch
 
@@ -34,10 +35,11 @@ To stop the server later, run:
 
 `powershell -ExecutionPolicy Bypass -File .\scripts\stop-workout-app.ps1`
 
-You can load the training state in two ways:
+You can load the training state in three ways:
 
-1. `Auto-load State File` (tries a hosted snapshot first, then falls back to `state/current-state.json` when running from the workspace)
+1. `Auto-load State File` (tries `/api/state/current` first, then falls back to the hosted snapshot and finally `state/current-state.json`)
 2. `Choose State File` and select `state/current-state.json` (works from file open too)
+3. `Save Loaded State To Cloud` after loading a JSON file, if the backend storage is configured
 
 ## Hosting build
 
@@ -54,6 +56,30 @@ That creates `dist/static-site/` with:
 
 This keeps the hosted app self-contained without publishing the rest of the workspace.
 
+## API storage layer
+
+This repository now includes an Azure Functions API in `api/`.
+
+Current endpoints:
+
+- `GET /api/state/current`
+- `PUT /api/state/current`
+- `POST /api/session-log`
+
+The intended storage model is Azure Blob Storage.
+
+Required app settings for the deployed API:
+
+- `TRAINING_STORAGE_CONNECTION_STRING`
+- `TRAINING_STATE_CONTAINER` (optional, defaults to `training-state`)
+- `TRAINING_STATE_BLOB` (optional, defaults to `current-state.json`)
+- `TRAINING_LOGS_CONTAINER` (optional, defaults to `training-logs`)
+
+If blob storage is not configured yet:
+
+- the hosted app will still fall back to the deployed static state snapshot
+- cloud save actions will fail with a clear error message
+
 ## Azure Static Web Apps
 
 This repository now includes a GitHub Actions workflow at `.github/workflows/azure-static-web-apps.yml`.
@@ -61,8 +87,8 @@ This repository now includes a GitHub Actions workflow at `.github/workflows/azu
 The deploy flow is:
 
 1. GitHub Actions runs `scripts/publish-static-site.ps1`
-2. the workflow deploys `dist/static-site/` to Azure Static Web Apps
-3. the hosted app auto-loads `data/current-state.json`
+2. the workflow deploys `dist/static-site/` and `api/` to Azure Static Web Apps
+3. the hosted app auto-loads `/api/state/current` when available
 
 To finish the Azure setup:
 
@@ -77,8 +103,9 @@ To finish the Azure setup:
 At the end:
 
 1. click `Generate Log Markdown`
-2. click `Copy Log` and paste in chat, or `Download Log` and save into `logs/`
-3. ask the agent to update state using that result
+2. click `Save Log To Cloud` if the API is configured
+3. or click `Copy Log` and paste in chat, or `Download Log` and save into `logs/`
+4. ask the agent to update state using that result
 
 Use this message after pasting the output:
 

@@ -1,0 +1,14 @@
+{
+  "name": "training-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Azure Functions API for training state and session log storage.",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.7.3",
+    "@azure/storage-blob": "^12.28.0"
+  }
+}

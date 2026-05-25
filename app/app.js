@@ -14,7 +14,9 @@ const appState = {
   audioContext: null
 };
 
-const DEFAULT_STATE_PATHS = ["./data/current-state.json", "../state/current-state.json"];
+const API_STATE_PATH = "/api/state/current";
+const API_SESSION_LOG_PATH = "/api/session-log";
+const DEFAULT_STATE_PATHS = [API_STATE_PATH, "./data/current-state.json", "../state/current-state.json"];
 
 const refs = {
   sessionMeta: document.getElementById("sessionMeta"),
@@ -26,6 +28,7 @@ const refs = {
   betweenExerciseRest: document.getElementById("betweenExerciseRest"),
   beepToggle: document.getElementById("beepToggle"),
   autoLoadBtn: document.getElementById("autoLoadBtn"),
+  saveStateBtn: document.getElementById("saveStateBtn"),
   stateFileInput: document.getElementById("stateFileInput"),
   previewSummary: document.getElementById("previewSummary"),
   previewList: document.getElementById("previewList"),
@@ -52,8 +55,15 @@ const refs = {
   generateLogBtn: document.getElementById("generateLogBtn"),
   downloadLogBtn: document.getElementById("downloadLogBtn"),
   copyLogBtn: document.getElementById("copyLogBtn"),
+  saveLogBtn: document.getElementById("saveLogBtn"),
+  logSaveMessage: document.getElementById("logSaveMessage"),
   logOutput: document.getElementById("logOutput")
 };
+
+function setStatusMessage(element, message, isError = false) {
+  element.textContent = message;
+  element.style.color = isError ? "#7a1f35" : "#1f7a6c";
+}
 
 function titleize(key) {
   return key.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
@@ -216,6 +226,29 @@ function stopRestTimer() {
     clearInterval(appState.restTimerId);
     appState.restTimerId = null;
   }
+}
+
+async function requestJson(url, options = {}) {
+  const resp = await fetch(url, options);
+  const text = await resp.text();
+  let body = null;
+
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = text;
+    }
+  }
+
+  if (!resp.ok) {
+    const message = typeof body === "object" && body?.error
+      ? body.error
+      : `Request failed with status ${resp.status}.`;
+    throw new Error(message);
+  }
+
+  return body;
 }
 
 function playRestEndBeep() {
@@ -431,8 +464,11 @@ function downloadLog(markdownText) {
 }
 
 function setSetupMessage(message, isError = false) {
-  refs.setupMessage.textContent = message;
-  refs.setupMessage.style.color = isError ? "#7a1f35" : "#1f7a6c";
+  setStatusMessage(refs.setupMessage, message, isError);
+}
+
+function setLogSaveMessage(message, isError = false) {
+  setStatusMessage(refs.logSaveMessage, message, isError);
 }
 
 function ingestStateObject(stateObj) {
@@ -449,6 +485,9 @@ function ingestStateObject(stateObj) {
   refs.logOutput.value = "";
   refs.downloadLogBtn.disabled = true;
   refs.copyLogBtn.disabled = true;
+  refs.saveLogBtn.disabled = true;
+  refs.saveStateBtn.disabled = false;
+  setLogSaveMessage("");
   renderSessionHistory();
 
   renderPreview();
@@ -459,13 +498,7 @@ async function autoLoadState() {
 
   for (const statePath of DEFAULT_STATE_PATHS) {
     try {
-      const resp = await fetch(statePath, { cache: "no-store" });
-      if (!resp.ok) {
-        lastError = new Error(`Unable to fetch ${statePath} automatically.`);
-        continue;
-      }
-
-      const stateObj = await resp.json();
+      const stateObj = await requestJson(statePath, { cache: "no-store" });
       ingestStateObject(stateObj);
       setSetupMessage(`State loaded from ${statePath}.`);
       return;
@@ -484,7 +517,73 @@ async function loadFromFileInput(file) {
   setSetupMessage(`State loaded from ${file.name}.`);
 }
 
+async function saveCurrentStateToCloud() {
+  if (!appState.rawState) {
+    window.alert("Load a state file first.");
+    return;
+  }
+
+  refs.saveStateBtn.disabled = true;
+
+  try {
+    const response = await requestJson(API_STATE_PATH, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(appState.rawState)
+    });
+
+    setSetupMessage(`Current state saved to cloud (${response.blobName}).`);
+  } catch (err) {
+    setSetupMessage(err.message, true);
+  } finally {
+    refs.saveStateBtn.disabled = false;
+  }
+}
+
+function buildSessionLogPayload() {
+  const generatedAt = new Date().toISOString();
+
+  return {
+    sessionName: appState.sessionName,
+    weekOfCycle: appState.rawState?.cycle?.current_week ?? null,
+    overallFeel: refs.overallFeel.value,
+    sessionNotes: refs.sessionNotes.value.trim(),
+    results: appState.results,
+    markdown: appState.lastLogOutput,
+    generatedAt
+  };
+}
+
+async function saveLogToCloud() {
+  if (!appState.lastLogOutput) {
+    window.alert("Generate the log before saving it to cloud storage.");
+    return;
+  }
+
+  refs.saveLogBtn.disabled = true;
+  setLogSaveMessage("Saving log to cloud...");
+
+  try {
+    const response = await requestJson(API_SESSION_LOG_PATH, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(buildSessionLogPayload())
+    });
+
+    setLogSaveMessage(`Log saved to cloud (${response.blobName}).`);
+  } catch (err) {
+    setLogSaveMessage(err.message, true);
+  } finally {
+    refs.saveLogBtn.disabled = false;
+  }
+}
+
 refs.autoLoadBtn.addEventListener("click", autoLoadState);
+refs.saveStateBtn.addEventListener("click", saveCurrentStateToCloud);
 
 refs.beepToggle.addEventListener("change", () => {
   appState.restEndBeepEnabled = refs.beepToggle.checked;
@@ -533,6 +632,8 @@ refs.generateLogBtn.addEventListener("click", () => {
   refs.logOutput.value = markdown;
   refs.downloadLogBtn.disabled = false;
   refs.copyLogBtn.disabled = false;
+  refs.saveLogBtn.disabled = false;
+  setLogSaveMessage("");
 });
 
 refs.downloadLogBtn.addEventListener("click", () => {
@@ -552,3 +653,5 @@ refs.copyLogBtn.addEventListener("click", async () => {
     window.alert("Clipboard copy failed. You can still copy from the log output box.");
   }
 });
+
+refs.saveLogBtn.addEventListener("click", saveLogToCloud);
