@@ -23,6 +23,10 @@ const DEFAULT_STATE_PATHS = [API_STATE_PATH, "./data/current-state.json", "../st
 
 const refs = {
   sessionMeta: document.getElementById("sessionMeta"),
+  phoneAccessQr: document.getElementById("phoneAccessQr"),
+  phoneAccessUrl: document.getElementById("phoneAccessUrl"),
+  copyPhoneLinkBtn: document.getElementById("copyPhoneLinkBtn"),
+  phoneAccessMessage: document.getElementById("phoneAccessMessage"),
   setupCard: document.getElementById("setupCard"),
   previewCard: document.getElementById("previewCard"),
   workoutCard: document.getElementById("workoutCard"),
@@ -486,6 +490,20 @@ function setAssistantStatus(message, isError = false) {
   setStatusMessage(refs.assistantStatus, message, isError);
 }
 
+function setPhoneAccessMessage(message, isError = false) {
+  setStatusMessage(refs.phoneAccessMessage, message, isError);
+}
+
+function getShareableAppUrl() {
+  return window.location.href;
+}
+
+function renderPhoneAccess() {
+  const appUrl = getShareableAppUrl();
+  refs.phoneAccessUrl.value = appUrl;
+  refs.phoneAccessQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(appUrl)}`;
+}
+
 function showProposal(diffText, proposedState) {
   appState.pendingProposal = proposedState;
   refs.proposalDiff.textContent = diffText || "No diff returned.";
@@ -791,9 +809,19 @@ refs.discardProposalBtn.addEventListener("click", () => {
   clearProposal();
   setAssistantStatus("Proposed update discarded.");
 });
+refs.copyPhoneLinkBtn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(refs.phoneAccessUrl.value);
+    setPhoneAccessMessage("Link copied.");
+  } catch (err) {
+    setPhoneAccessMessage("Could not copy the link automatically.", true);
+  }
+});
 refs.assistantInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     sendAssistantMessage();
   }
 });
+
+renderPhoneAccess();

@@ -171,6 +171,30 @@ select {
   gap: 12px;
 }
 
+.phoneAccessGrid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.phoneAccessQrWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  background: #fffdf7;
+}
+
+.phoneAccessQr {
+  width: 100%;
+  max-width: 196px;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
 .liveGrid article {
   border: 1px solid var(--edge);
   border-radius: 12px;
@@ -313,6 +337,10 @@ select {
 }
 
 @media (max-width: 740px) {
+  .phoneAccessGrid {
+    grid-template-columns: 1fr;
+  }
+
   .liveGrid {
     grid-template-columns: 1fr;
   }

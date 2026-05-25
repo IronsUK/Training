@@ -11,6 +11,7 @@ This app gives live set-by-set workout guidance from the current training state.
 - captures end-of-session feedback
 - generates markdown log output you can paste in chat or save under `logs/`
 - can save the loaded state and generated session log to cloud storage when the API is configured
+- shows a QR code for the current page URL so you can open the app on another device
 
 ## How to launch
 

@@ -14,6 +14,24 @@
         <p id="sessionMeta" class="subtle">Load your state file to prepare today&apos;s session.</p>
       </header>
 
+      <section id="phoneAccessCard" class="card">
+        <h2>Open On Phone</h2>
+        <p class="subtle">Scan the QR code or copy the link to open this same app on another device.</p>
+        <div class="phoneAccessGrid">
+          <div class="phoneAccessQrWrap">
+            <img id="phoneAccessQr" class="phoneAccessQr" alt="QR code for this app" />
+          </div>
+          <div>
+            <label class="fieldLabel" for="phoneAccessUrl">Current app URL</label>
+            <input id="phoneAccessUrl" type="text" readonly />
+            <div class="actions">
+              <button id="copyPhoneLinkBtn" class="btn secondary">Copy Link</button>
+            </div>
+            <p id="phoneAccessMessage" class="subtle statusMessage"></p>
+          </div>
+        </div>
+      </section>
+
       <section id="setupCard" class="card">
         <h2>Load Today&apos;s Program</h2>
         <p>
