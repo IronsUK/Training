@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Live Guide</title>
+    <link rel="stylesheet" href="styles.css?v=4" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">Home Dumbbell Training</p>
+        <h1>Live Workout Guide</h1>
+        <p id="sessionMeta" class="subtle">Load your state file to prepare today&apos;s session.</p>
+      </header>
+
+      <section id="setupCard" class="card">
+        <h2>Load Today&apos;s Program</h2>
+        <p>
+          This app reads <strong>state/current-state.json</strong> and builds your live session from
+          <strong>next_session</strong> and <strong>next_targets</strong>.
+        </p>
+        <div class="actions">
+          <button id="autoLoadBtn" class="btn">Auto-load State File</button>
+          <label class="btn secondary" for="stateFileInput">Choose State File</label>
+          <input id="stateFileInput" type="file" accept="application/json" />
+        </div>
+        <label class="fieldLabel" for="betweenExerciseRest">Rest between exercises (seconds)</label>
+        <input id="betweenExerciseRest" type="number" min="0" value="75" />
+        <label class="toggleRow" for="beepToggle">
+          <input id="beepToggle" type="checkbox" checked />
+          <span>Play a short beep when rest ends</span>
+        </label>
+        <p id="setupMessage" class="subtle"></p>
+      </section>
+
+      <section id="previewCard" class="card hidden">
+        <h2>Today&apos;s Preview</h2>
+        <div id="previewSummary" class="summary"></div>
+        <ol id="previewList" class="previewList"></ol>
+        <div class="actions">
+          <button id="startBtn" class="btn">Start Workout</button>
+        </div>
+      </section>
+
+      <section id="workoutCard" class="card hidden">
+        <h2>Live Session</h2>
+        <div class="liveGrid">
+          <article>
+            <p class="eyebrow">Current Exercise</p>
+            <h3 id="currentExerciseName">-</h3>
+            <p id="currentExerciseDetails" class="subtle"></p>
+            <p id="setProgress" class="setProgress"></p>
+          </article>
+          <article>
+            <p class="eyebrow">Next Exercise</p>
+            <h3 id="nextExerciseName">-</h3>
+            <p id="nextExerciseDetails" class="subtle"></p>
+          </article>
+        </div>
+
+        <div class="tempoLegend" aria-live="polite">
+          <p class="eyebrow">Tempo Legend</p>
+          <p id="currentTempoGuide" class="subtle">Tempo guide appears here.</p>
+          <p class="subtle">Format: first number = lowering, second = pause, third = lifting.</p>
+        </div>
+
+        <div id="setInputBlock" class="setInputBlock">
+          <label class="fieldLabel" for="actualRepsInput">Actual reps this set</label>
+          <input id="actualRepsInput" type="number" min="0" placeholder="Enter reps" />
+          <label class="fieldLabel" for="setNotesInput">Set notes (optional)</label>
+          <textarea
+            id="setNotesInput"
+            rows="3"
+            placeholder="Capture notes now: RPE, weight adjustment, ROM, form, pain, setup"
+          ></textarea>
+          <div class="actions">
+            <button id="completeSetBtn" class="btn">Complete Set</button>
+          </div>
+        </div>
+
+        <div id="restBlock" class="restBlock hidden">
+          <p class="eyebrow">Rest Timer</p>
+          <h3 id="restLabel">Rest</h3>
+          <p id="restCountdown" class="countdown">0s</p>
+          <div class="actions">
+            <button id="skipRestBtn" class="btn secondary">Skip Rest</button>
+          </div>
+        </div>
+
+        <div class="historyBlock">
+          <p class="eyebrow">Session History</p>
+          <p class="subtle">Completed sets and notes appear here as you go.</p>
+          <ul id="sessionHistory" class="historyList">
+            <li class="historyEmpty">No sets logged yet.</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button id="finishEarlyBtn" class="btn secondary">Finish Session Early</button>
+        </div>
+      </section>
+
+      <section id="finishCard" class="card hidden">
+        <h2>Session Complete</h2>
+        <p>Review your performance and capture feedback for logging.</p>
+        <div id="resultSummary" class="summary"></div>
+
+        <label class="fieldLabel" for="overallFeel">Overall feel</label>
+        <select id="overallFeel">
+          <option value="fine">Fine</option>
+          <option value="tough">Tough</option>
+          <option value="very_tough">Very tough</option>
+          <option value="tired">Tired</option>
+          <option value="pain_issue">Pain or issue</option>
+        </select>
+
+        <label class="fieldLabel" for="sessionNotes">Notes</label>
+        <textarea id="sessionNotes" rows="4" placeholder="Any recovery, form, or pain notes..."></textarea>
+
+        <div class="actions">
+          <button id="generateLogBtn" class="btn">Generate Log Markdown</button>
+          <button id="downloadLogBtn" class="btn secondary" disabled>Download Log</button>
+          <button id="copyLogBtn" class="btn secondary" disabled>Copy Log</button>
+        </div>
+
+        <label class="fieldLabel" for="logOutput">Log output</label>
+        <textarea id="logOutput" rows="14" readonly></textarea>
+      </section>
+    </main>
+
+    <script src="app.js?v=4"></script>
+  </body>
+</html>

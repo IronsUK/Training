@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^powershell -ExecutionPolicy Bypass -File \\.\\\\scripts\\\\start-workout-app\\.ps1$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

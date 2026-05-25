@@ -1,0 +1,337 @@
+{
+  "program_name": "Home Dumbbell Strength + Hypertrophy",
+  "cycle": {
+    "length_weeks": 8,
+    "current_week": 2,
+    "cycle_start_date": "2026-04-21",
+    "deload_week": 4,
+    "performance_week": 8
+  },
+  "rotation": [
+    "Push",
+    "Lower A",
+    "Pull",
+    "Lower B"
+  ],
+  "status": {
+    "next_session": "Lower B",
+    "last_completed_session": "Pull",
+    "last_completed_session_date": "2026-05-23",
+    "completed_sessions_this_cycle": 12,
+    "typical_session_length_minutes": "30-45 (up to 50 on full-coverage days)",
+    "target_training_days_per_week": "3-5 strength sessions (plus running/padel)",
+    "target_total_activity_days_per_week": "5-6 combined training exposures"
+  },
+  "progression_priority": [
+    "reps",
+    "tempo",
+    "pause",
+    "range_of_motion",
+    "unilateral_work",
+    "rest_control",
+    "density"
+  ],
+  "next_targets": {
+    "Push": {
+      "dumbbell_bench_press": {
+        "load": "2 x 19.5 kg",
+        "sets": 3,
+        "rep_target": "8-12",
+        "tempo": "2-0-1",
+        "rest_seconds": 120,
+        "note": "Latest session was 12-11-9. Keep load fixed and rebuild the total reps before progressing; aim to bring set 3 back toward 10-12 clean."
+      },
+      "one_arm_overhead_press": {
+        "load": "10 kg",
+        "sets": 3,
+        "rep_target": "8-12 per arm",
+        "tempo": "2-0-1",
+        "rest_seconds": 75,
+        "note": "Hit 9-9-9. Hold the target steady, let the left arm set the ceiling, and build back toward 10-10-10 with strict posture before progressing."
+      },
+      "incline_press": {
+        "load": "2 x 12.5 kg",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "3-0-1",
+        "rest_seconds": 75,
+        "note": "First session at the slower tempo came in at 15-13. Keep load and tempo fixed and build set 2 back to 15 before progressing."
+      },
+      "lateral_raise": {
+        "load": "8 kg",
+        "sets": 2,
+        "rep_target": "8-15",
+        "tempo": "2-1-3",
+        "rest_seconds": 45,
+        "note": "At the slower tempo, reps landed at 12-15. Keep the same load and strict setup, and bring set 1 up before progressing."
+      },
+      "triceps_extension": {
+        "load": "10 kg single dumbbell",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "3-0-1",
+        "rest_seconds": 60,
+        "note": "Set 1 was 15 at 10 kg and set 2 was 12 with 12.5 kg. Standardize the next session at 10 kg with the same tempo and earn a full 2 x 15 clean before increasing load."
+      }
+    },
+    "Lower A": {
+      "bulgarian_split_squat": {
+        "load": "2 x 12.5 kg",
+        "sets": 3,
+        "rep_target": "8-12 per leg",
+        "tempo": "2-0-1",
+        "rest_seconds": 75,
+        "note": "Earned return to 12.5 kg (hit 3x12 clean at 12 lbs). Right leg stronger than left — match reps to left side and keep all sets clean."
+      },
+      "romanian_deadlift": {
+        "load": "2 x 19.5 kg",
+        "sets": 3,
+        "rep_target": "10-15",
+        "tempo": "4-1-1",
+        "rest_seconds": 90,
+        "note": "Hit 3x15 at 3-1-1; progress to 4s eccentric. Load stays the same — the slower tempo is the challenge."
+      },
+      "goblet_squat": {
+        "load": "19.5 kg",
+        "sets": 2,
+        "rep_target": "12-20",
+        "tempo": "3-0-1",
+        "rest_seconds": 60
+      },
+      "calf_raise": {
+        "load": "bodyweight or 19.5 kg",
+        "sets": 2,
+        "rep_target": "12-20 per side",
+        "tempo": "2-1-2",
+        "rest_seconds": 30
+      },
+      "plank": {
+        "load": "bodyweight",
+        "sets": 2,
+        "rep_target": "30-60 seconds",
+        "tempo": "hold",
+        "rest_seconds": 30
+      },
+      "side_plank": {
+        "load": "bodyweight",
+        "sets": 2,
+        "rep_target": "20-40 seconds per side",
+        "tempo": "hold",
+        "rest_seconds": 30,
+        "note": "Keep hips stacked and ribs down; prioritize clean holds over max time."
+      }
+    },
+    "Pull": {
+      "one_arm_row": {
+        "load": "19.5 kg",
+        "sets": 3,
+        "rep_target": "10-15 per arm",
+        "tempo": "4-2-1",
+        "rest_seconds": 60,
+        "note": "Topped out again at 19.5 kg with the slower eccentric. Keep the load fixed and add a longer squeeze before changing load or variation."
+      },
+      "door_anchor_lat_pulldown": {
+        "load": "Single-arm with current INNSTAR setup",
+        "sets": 2,
+        "rep_target": "10-15 per arm",
+        "tempo": "2-1-2",
+        "rest_seconds": 60,
+        "note": "The single-arm setup landed cleanly in range at 14-14. Keep the current band setup and build to 15-15 per arm before progressing."
+      },
+      "rear_delt_raise": {
+        "load": "12 lbs pair",
+        "sets": 2,
+        "rep_target": "12-20",
+        "tempo": "2-1-3",
+        "rest_seconds": 45,
+        "note": "Exceeded the rep range at the current setup. Keep the same load, stay pain-free, and make the lowering phase slower before changing anything else."
+      },
+      "pullover": {
+        "load": "8 kg single dumbbell per arm",
+        "sets": 2,
+        "rep_target": "10-15 per arm",
+        "tempo": "2-1-1",
+        "rest_seconds": 60,
+        "note": "Keep the single-arm setup at 8 kg per arm and build total reps with clean shoulder motion before returning to 10 kg."
+      },
+      "hammer_curl": {
+        "load": "10 kg",
+        "sets": 2,
+        "rep_target": "8-15",
+        "tempo": "3-2-1",
+        "rest_seconds": 45,
+        "note": "Set 2 ran past the range but set 1 did not. Hold the setup steady and bring set 1 to 15 clean before progressing further."
+      },
+      "preacher_curl": {
+        "load": "8 kg",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "3-1-1",
+        "rest_seconds": 45,
+        "note": "Hit 15-15 clean. Keep 8 kg fixed and add a brief squeeze at peak contraction before increasing difficulty."
+      },
+      "incline_prone_y_raise": {
+        "load": "10 lbs pair",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "2-1-3",
+        "rest_seconds": 45,
+        "note": "Exceeded the rep range at 10 lbs. Keep the load fixed and slow the lowering phase while keeping clean lower-trap control before increasing difficulty."
+      }
+    },
+    "Lower B": {
+      "reverse_lunge": {
+        "load": "2 x 10-12.5 kg",
+        "sets": 3,
+        "rep_target": "8-12 per leg",
+        "tempo": "2-0-1",
+        "rest_seconds": 75,
+        "note": "Keep the load band fixed, but aim to bring the early sets up toward 12.5 kg instead of starting back at 8 kg. Only move all 3 sets to 12.5 kg when they stay clean."
+      },
+      "hip_thrust_or_glute_bridge": {
+        "load": "19.5 kg",
+        "sets": 3,
+        "rep_target": "12-20",
+        "tempo": "3-2-1",
+        "rest_seconds": 60,
+        "note": "Hit 3x20 at 2-2-1. Keep load fixed and make the eccentric slower before changing anything else."
+      },
+      "single_leg_rdl": {
+        "load": "12.5 kg",
+        "sets": 2,
+        "rep_target": "8-12 per leg",
+        "tempo": "3-1-1",
+        "rest_seconds": 60,
+        "note": "Hit 2x12 clean. Keep load fixed and slow the lowering phase while keeping balance and hip position strict."
+      },
+      "paused_goblet_squat": {
+        "load": "19.5 kg",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "2-2-1",
+        "rest_seconds": 60,
+        "note": "Set 2 reached 15. Keep load fixed and bring set 1 up to 15 with the same paused control before progressing further."
+      },
+      "abs": {
+        "load": "bodyweight",
+        "sets": 2,
+        "rep_target": "10-20 reps or 20-40 seconds",
+        "tempo": "controlled",
+        "rest_seconds": 30,
+        "note": "Hold this steady unless you want to choose a clearly harder but still controlled ab variation next time."
+      },
+      "sliding_leg_curl": {
+        "load": "bodyweight (towel on smooth floor)",
+        "sets": 2,
+        "rep_target": "8-12",
+        "tempo": "2-1-1",
+        "rest_seconds": 60,
+        "note": "Keep hips up and move slowly through full range. Hold the target steady until both sets stay clean without form fading."
+      },
+      "tibialis_raise": {
+        "load": "bodyweight (wall supported)",
+        "sets": 2,
+        "rep_target": "15-25",
+        "tempo": "2-1-2",
+        "rest_seconds": 30,
+        "note": "Use controlled reps for shin and ankle resilience. Keep the target steady and adjust setup or range if heel discomfort shows up again."
+      }
+    },
+    "Lower A + Pull Combo": {
+      "bulgarian_split_squat": {
+        "load": "2 x 12 lbs (build back to 12.5 kg)",
+        "sets": 3,
+        "rep_target": "8-12 per leg",
+        "tempo": "2-0-1",
+        "rest_seconds": 75,
+        "note": "Use strict reps. When all 3 sets are 10+ clean at 12 lbs, return to 12.5 kg."
+      },
+      "romanian_deadlift": {
+        "load": "2 x 19.5 kg",
+        "sets": 3,
+        "rep_target": "10-15",
+        "tempo": "3-1-1",
+        "rest_seconds": 90,
+        "note": "Top of range achieved on all sets; keep load and progress with slower eccentric."
+      },
+      "goblet_squat": {
+        "load": "19.5 kg",
+        "sets": 2,
+        "rep_target": "12-20",
+        "tempo": "3-0-1",
+        "rest_seconds": 60
+      },
+      "calf_raise": {
+        "load": "bodyweight or 19.5 kg",
+        "sets": 2,
+        "rep_target": "12-20 per side",
+        "tempo": "2-1-2",
+        "rest_seconds": 30
+      },
+      "plank": {
+        "load": "bodyweight",
+        "sets": 2,
+        "rep_target": "30-60 seconds",
+        "tempo": "hold",
+        "rest_seconds": 30
+      },
+      "one_arm_row": {
+        "load": "19.5 kg",
+        "sets": 3,
+        "rep_target": "10-15 per arm",
+        "tempo": "3-1-1",
+        "rest_seconds": 60,
+        "note": "Keep reps in the target range with strict torso control; avoid overshooting early sets and build stable totals."
+      },
+      "door_anchor_lat_pulldown": {
+        "load": "INNSTAR Advanced pack (start at moderate tension)",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "2-1-2",
+        "rest_seconds": 60,
+        "note": "Add this before rear delt/curl work to cover vertical pulling in combo sessions."
+      },
+      "rear_delt_raise": {
+        "load": "12 lbs pair",
+        "sets": 2,
+        "rep_target": "12-20",
+        "tempo": "2-1-2",
+        "rest_seconds": 45,
+        "note": "Keep this controlled and pain-free. Prioritize clean shoulder motion over load, then build reps before returning to 8 kg."
+      },
+      "pullover": {
+        "load": "19.5 kg single dumbbell",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "2-1-1",
+        "rest_seconds": 60,
+        "note": "Keep at least 2 sets after pulldowns; keep smooth shoulder motion and build reps before increasing tension elsewhere."
+      },
+      "hammer_curl": {
+        "load": "10 kg",
+        "sets": 2,
+        "rep_target": "8-15",
+        "tempo": "3-1-1",
+        "rest_seconds": 45,
+        "note": "Reached top of range on both sets. Keep load and add a brief squeeze at peak contraction."
+      },
+      "preacher_curl": {
+        "load": "8 kg",
+        "sets": 2,
+        "rep_target": "10-15",
+        "tempo": "2-0-1",
+        "rest_seconds": 45,
+        "note": "Use strict form with upper arm braced on bench or thigh. Keep target steady and bring set 2 toward 15 before progressing."
+      }
+    }
+  },
+  "update_rules": {
+    "success_rule": "If all work sets land at or above the top of the target range with solid form, make the next session slightly harder using the progression priority.",
+    "hold_rule": "If performance is inside the range but not yet at the top across all sets, keep the target setup the same and aim for more reps next time.",
+    "fatigue_rule": "If reps drop sharply, technique breaks down, or recovery was poor, repeat the same target next time or make the variation slightly easier.",
+    "hybrid_lower_rule": "If hard running/padel in the last 24 hours, high-step/all-day walking the prior day, or leg readiness is 1-2, run a light lower day: first 2 lower lifts only, minus 1 set each, and keep 2-3 reps in reserve.",
+    "lower_progression_gate": "Do not progress lower-body targets based on a light lower day performed under fatigue constraints.",
+    "deload_rule": "In week 4, reduce work sets by about half and stay well short of failure.",
+    "performance_rule": "In week 8, aim to beat your best set or total reps on the first main lift of the day, then keep the remaining work controlled."
+  }
+}

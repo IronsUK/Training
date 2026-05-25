@@ -1,0 +1,278 @@
+:root {
+  --bg: #f2efe8;
+  --ink: #1f1f1f;
+  --muted: #5a5a5a;
+  --panel: #fff9ee;
+  --edge: #d6cfbf;
+  --brand: #9b2c20;
+  --brand-dark: #7f2117;
+  --accent: #1f7a6c;
+  --danger: #7a1f35;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 15%, #fff2d6 0%, rgba(255, 242, 214, 0) 42%),
+    radial-gradient(circle at 84% 20%, #e5f2eb 0%, rgba(229, 242, 235, 0) 38%),
+    linear-gradient(160deg, #f6f2e8 0%, #e9e3d4 100%);
+  font-family: "Aptos", "Segoe UI Variable", "Trebuchet MS", sans-serif;
+}
+
+.shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px 16px 56px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.hero {
+  margin-bottom: 18px;
+  animation: slideIn 420ms ease-out;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.subtle {
+  color: var(--muted);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(29, 29, 29, 0.08);
+  padding: 16px;
+  margin-bottom: 14px;
+  animation: pop 320ms ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  background: var(--brand);
+  color: #fff;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.btn:hover {
+  background: var(--brand-dark);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.secondary {
+  background: #f4ebdb;
+  color: var(--ink);
+  border: 1px solid var(--edge);
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--edge);
+  padding: 10px;
+  background: #fffcf5;
+  color: var(--ink);
+  font: inherit;
+}
+
+#setNotesInput {
+  resize: vertical;
+}
+
+.fieldLabel {
+  margin-top: 12px;
+  display: block;
+  font-weight: 600;
+}
+
+.toggleRow {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.toggleRow input {
+  width: auto;
+  margin-top: 0;
+}
+
+#stateFileInput {
+  position: absolute;
+  left: -9999px;
+}
+
+.previewList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.summary {
+  margin-bottom: 12px;
+  padding: 10px;
+  border-left: 4px solid var(--accent);
+  background: #f3f8f6;
+  border-radius: 8px;
+}
+
+.liveGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.liveGrid article {
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fffdf7;
+}
+
+.setProgress {
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.tempoLegend {
+  margin-top: 12px;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  padding: 12px;
+  background: #f9f5ea;
+}
+
+.tempoLegend .subtle {
+  margin: 6px 0 0;
+}
+
+.setInputBlock,
+.restBlock {
+  margin-top: 14px;
+  border: 1px dashed var(--edge);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.historyBlock {
+  margin-top: 14px;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fffdf7;
+}
+
+.historyList {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.historyItem {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(214, 207, 191, 0.8);
+}
+
+.historyItem:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.historyHeadline,
+.historyNote {
+  margin: 0;
+}
+
+.historyHeadline {
+  font-weight: 700;
+}
+
+.historyNote {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.historyEmpty {
+  color: var(--muted);
+}
+
+.countdown {
+  font-size: 2.1rem;
+  line-height: 1;
+  margin: 6px 0 0;
+  font-weight: 800;
+  color: var(--danger);
+}
+
+@media (max-width: 740px) {
+  .liveGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
