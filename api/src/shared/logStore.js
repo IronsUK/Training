@@ -71,6 +71,34 @@ async function searchSessionLogs(filters = {}) {
   return listSessionLogs(filters);
 }
 
+async function listSessionLogDocuments(filters = {}) {
+  const { logsContainer } = getStorageConfig();
+  const containerClient = await getContainerClient(logsContainer);
+  const items = [];
+  const limit = normalizeLimit(filters.limit);
+  const searchText = String(filters.query || "").trim().toLowerCase();
+  const sessionFilter = String(filters.session || "").trim().toLowerCase();
+
+  for await (const blob of containerClient.listBlobsFlat()) {
+    if (!blob.name.endsWith(".json")) {
+      continue;
+    }
+
+    const document = await readLogDocument(containerClient, blob.name);
+    if (!matchesFilters(document, sessionFilter, searchText)) {
+      continue;
+    }
+
+    items.push({
+      ...document,
+      blobName: blob.name
+    });
+  }
+
+  items.sort((left, right) => String(right.date).localeCompare(String(left.date)));
+  return items.slice(0, limit);
+}
+
 async function readLogDocument(containerClient, blobName) {
   const blobClient = containerClient.getBlobClient(blobName);
   const download = await blobClient.download();
@@ -154,6 +182,7 @@ async function streamToText(readableStream) {
 }
 
 module.exports = {
+  listSessionLogDocuments,
   listSessionLogs,
   saveSessionLog,
   searchSessionLogs

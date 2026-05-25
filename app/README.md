@@ -67,6 +67,7 @@ Current endpoints:
 - `POST /api/session-log`
 - `GET /api/session-log`
 - `GET /api/session-log/search`
+- `POST /api/assistant/chat`
 
 The intended storage model is Azure Blob Storage.
 
@@ -76,11 +77,20 @@ Required app settings for the deployed API:
 - `TRAINING_STATE_CONTAINER` (optional, defaults to `training-state`)
 - `TRAINING_STATE_BLOB` (optional, defaults to `current-state.json`)
 - `TRAINING_LOGS_CONTAINER` (optional, defaults to `training-logs`)
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_API_KEY`
+- `AZURE_OPENAI_DEPLOYMENT`
+- `AZURE_OPENAI_API_VERSION` (optional, defaults to `2024-10-21`)
 
 If blob storage is not configured yet:
 
 - the hosted app will still fall back to the deployed static state snapshot
 - cloud save actions will fail with a clear error message
+
+If Azure OpenAI is not configured yet:
+
+- trainer chat requests will fail with a clear configuration error
+- the chat UI is present, but the assistant is not usable until the model settings are added
 
 ## Historical log migration
 

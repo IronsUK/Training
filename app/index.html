@@ -35,6 +35,23 @@
         <p id="setupMessage" class="subtle"></p>
       </section>
 
+      <section id="assistantCard" class="card">
+        <h2>Trainer Assistant</h2>
+        <p class="subtle">Ask about today&apos;s session, switch sessions when recovery changes, or review progress on a lift.</p>
+        <div id="assistantHistory" class="assistantHistory" aria-live="polite">
+          <article class="assistantMessage assistantMessageAssistant">
+            <p class="assistantRole">Trainer</p>
+            <p class="assistantText">Ask something like: What should I do today? Or: I went for a run, so switch me to the next upper-body session instead of lower.</p>
+          </article>
+        </div>
+        <label class="fieldLabel" for="assistantInput">Message</label>
+        <textarea id="assistantInput" rows="3" placeholder="Ask about today's plan, previous sessions, or exercise progress..."></textarea>
+        <div class="actions">
+          <button id="sendAssistantBtn" class="btn">Ask Trainer</button>
+        </div>
+        <p id="assistantStatus" class="subtle statusMessage"></p>
+      </section>
+
       <section id="previewCard" class="card hidden">
         <h2>Today&apos;s Preview</h2>
         <div id="previewSummary" class="summary"></div>

@@ -16,6 +16,7 @@ const appState = {
 
 const API_STATE_PATH = "/api/state/current";
 const API_SESSION_LOG_PATH = "/api/session-log";
+const API_ASSISTANT_CHAT_PATH = "/api/assistant/chat";
 const DEFAULT_STATE_PATHS = [API_STATE_PATH, "./data/current-state.json", "../state/current-state.json"];
 
 const refs = {
@@ -25,6 +26,10 @@ const refs = {
   workoutCard: document.getElementById("workoutCard"),
   finishCard: document.getElementById("finishCard"),
   setupMessage: document.getElementById("setupMessage"),
+  assistantHistory: document.getElementById("assistantHistory"),
+  assistantInput: document.getElementById("assistantInput"),
+  sendAssistantBtn: document.getElementById("sendAssistantBtn"),
+  assistantStatus: document.getElementById("assistantStatus"),
   betweenExerciseRest: document.getElementById("betweenExerciseRest"),
   beepToggle: document.getElementById("beepToggle"),
   autoLoadBtn: document.getElementById("autoLoadBtn"),
@@ -471,6 +476,10 @@ function setLogSaveMessage(message, isError = false) {
   setStatusMessage(refs.logSaveMessage, message, isError);
 }
 
+function setAssistantStatus(message, isError = false) {
+  setStatusMessage(refs.assistantStatus, message, isError);
+}
+
 function ingestStateObject(stateObj) {
   const parsed = parseExercisesFromState(stateObj);
   appState.rawState = stateObj;
@@ -546,14 +555,90 @@ function buildSessionLogPayload() {
   const generatedAt = new Date().toISOString();
 
   return {
+    date: generatedAt.slice(0, 10),
     sessionName: appState.sessionName,
     weekOfCycle: appState.rawState?.cycle?.current_week ?? null,
     overallFeel: refs.overallFeel.value,
     sessionNotes: refs.sessionNotes.value.trim(),
     results: appState.results,
+    exercises: appState.exercises.map((exercise) => ({
+      exerciseName: exercise.name,
+      target: `${exercise.sets} sets, ${exercise.repTarget}, ${exercise.load}, tempo ${exercise.tempo}`,
+      sets: (appState.results[exercise.key] || []).map((setResult, idx) => ({
+        setNumber: idx + 1,
+        value: String(normalizeSetResult(setResult).reps),
+        note: normalizeSetResult(setResult).note
+      }))
+    })),
     markdown: appState.lastLogOutput,
     generatedAt
   };
+}
+
+function appendAssistantMessage(role, text) {
+  const article = document.createElement("article");
+  article.className = `assistantMessage ${role === "user" ? "assistantMessageUser" : "assistantMessageAssistant"}`;
+
+  const roleLine = document.createElement("p");
+  roleLine.className = "assistantRole";
+  roleLine.textContent = role === "user" ? "You" : "Trainer";
+
+  const bodyLine = document.createElement("p");
+  bodyLine.className = "assistantText";
+  bodyLine.textContent = text;
+
+  article.appendChild(roleLine);
+  article.appendChild(bodyLine);
+  refs.assistantHistory.appendChild(article);
+  refs.assistantHistory.scrollTop = refs.assistantHistory.scrollHeight;
+}
+
+function applyAssistantState(stateObj) {
+  if (!stateObj) {
+    return;
+  }
+
+  if (refs.workoutCard.classList.contains("hidden")) {
+    ingestStateObject(stateObj);
+  } else {
+    appState.rawState = stateObj;
+    refs.saveStateBtn.disabled = false;
+  }
+}
+
+async function sendAssistantMessage() {
+  const message = refs.assistantInput.value.trim();
+  if (!message) {
+    return;
+  }
+
+  appendAssistantMessage("user", message);
+  refs.assistantInput.value = "";
+  refs.sendAssistantBtn.disabled = true;
+  setAssistantStatus("Trainer is thinking...");
+
+  try {
+    const response = await requestJson(API_ASSISTANT_CHAT_PATH, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    appendAssistantMessage("assistant", response.reply || "No reply returned.");
+    if (response.stateChanged && response.state) {
+      applyAssistantState(response.state);
+      setSetupMessage("Training state updated by the trainer assistant.");
+    }
+    setAssistantStatus("");
+  } catch (err) {
+    appendAssistantMessage("assistant", `I hit a problem: ${err.message}`);
+    setAssistantStatus(err.message, true);
+  } finally {
+    refs.sendAssistantBtn.disabled = false;
+    refs.assistantInput.focus();
+  }
 }
 
 async function saveLogToCloud() {
@@ -655,3 +740,10 @@ refs.copyLogBtn.addEventListener("click", async () => {
 });
 
 refs.saveLogBtn.addEventListener("click", saveLogToCloud);
+refs.sendAssistantBtn.addEventListener("click", sendAssistantMessage);
+refs.assistantInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendAssistantMessage();
+  }
+});
