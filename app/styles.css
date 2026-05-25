@@ -292,6 +292,26 @@ select {
   white-space: pre-wrap;
 }
 
+.proposalCard {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  background: #fffdf7;
+}
+
+.proposalDiff {
+  margin: 10px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--edge);
+  background: #f8f5ee;
+  white-space: pre-wrap;
+  font: 0.92rem/1.45 Consolas, "Cascadia Code", monospace;
+  max-height: 280px;
+  overflow: auto;
+}
+
 @media (max-width: 740px) {
   .liveGrid {
     grid-template-columns: 1fr;

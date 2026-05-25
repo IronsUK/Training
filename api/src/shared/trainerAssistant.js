@@ -18,56 +18,126 @@ async function handleTrainerMessage(message) {
     logs
   });
 
-  return applyAssistantAction(state, response);
+  return buildAssistantProposal(state, response);
 }
 
-async function applyAssistantAction(state, response) {
-  const action = response.action;
-
-  if (!action || action.type === "none") {
-    return {
-      reply: response.reply,
-      stateChanged: false,
-      intent: "chat"
-    };
-  }
-
-  if (action.type !== "switch_next_session") {
-    return {
-      reply: response.reply,
-      stateChanged: false,
-      intent: "chat"
-    };
-  }
-
-  const sessionName = String(action.sessionName || "").trim();
-  if (!sessionName) {
-    return {
-      reply: response.reply,
-      stateChanged: false,
-      intent: "chat"
-    };
-  }
-
-  const allowedSession = (state.rotation || []).find((session) => normalizeText(session) === normalizeText(sessionName));
-  if (!allowedSession) {
-    return {
-      reply: `${response.reply}\n\nI did not apply a session change because '${sessionName}' is not in your current rotation.`,
-      stateChanged: false,
-      intent: "chat"
-    };
-  }
-
-  const updatedState = structuredClone(state);
-  updatedState.status.next_session = allowedSession;
-  await saveCurrentState(updatedState);
+function buildAssistantProposal(state, response) {
+  const mergedProposal = response.proposedState && typeof response.proposedState === "object"
+    ? deepMerge(state, response.proposedState)
+    : null;
+  const diffText = mergedProposal ? buildDiffText(state, mergedProposal) : "";
+  const proposedState = diffText && diffText !== "No state changes proposed."
+    ? mergedProposal
+    : null;
 
   return {
     reply: response.reply,
-    stateChanged: true,
-    state: updatedState,
-    intent: "switch-next-session"
+    stateChanged: false,
+    proposedState,
+    diffText: proposedState ? diffText : "",
+    intent: proposedState ? "proposal" : "chat"
   };
+}
+
+async function applyStateProposal(proposedState) {
+  if (!proposedState || typeof proposedState !== "object") {
+    throw new Error("Proposed state must be a JSON object.");
+  }
+
+  await saveCurrentState(proposedState);
+
+  return {
+    ok: true,
+    state: proposedState
+  };
+}
+
+function buildDiffText(currentState, proposedState) {
+  const changes = [];
+  collectDiffs(currentState, proposedState, [], changes);
+
+  if (!changes.length) {
+    return "No state changes proposed.";
+  }
+
+  return changes
+    .slice(0, 200)
+    .map((change) => `${change.path || "root"}: ${formatDiffValue(change.before)} -> ${formatDiffValue(change.after)}`)
+    .join("\n");
+}
+
+function collectDiffs(currentValue, proposedValue, pathParts, changes) {
+  if (currentValue === proposedValue) {
+    return;
+  }
+
+  const currentIsObject = isPlainObject(currentValue);
+  const proposedIsObject = isPlainObject(proposedValue);
+
+  if (currentIsObject && proposedIsObject) {
+    const keys = new Set([...Object.keys(currentValue), ...Object.keys(proposedValue)]);
+    keys.forEach((key) => {
+      collectDiffs(currentValue[key], proposedValue[key], [...pathParts, key], changes);
+    });
+    return;
+  }
+
+  if (Array.isArray(currentValue) && Array.isArray(proposedValue)) {
+    if (JSON.stringify(currentValue) !== JSON.stringify(proposedValue)) {
+      changes.push({
+        path: pathParts.join("."),
+        before: currentValue,
+        after: proposedValue
+      });
+    }
+    return;
+  }
+
+  changes.push({
+    path: pathParts.join("."),
+    before: currentValue,
+    after: proposedValue
+  });
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function deepMerge(baseValue, patchValue) {
+  if (Array.isArray(baseValue) || Array.isArray(patchValue)) {
+    return patchValue;
+  }
+
+  if (!isPlainObject(baseValue) || !isPlainObject(patchValue)) {
+    return patchValue;
+  }
+
+  const merged = { ...baseValue };
+  Object.keys(patchValue).forEach((key) => {
+    merged[key] = key in baseValue
+      ? deepMerge(baseValue[key], patchValue[key])
+      : patchValue[key];
+  });
+
+  return merged;
+}
+
+function formatDiffValue(value) {
+  if (value === undefined) {
+    return "undefined";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (value === null || typeof value !== "object") {
+    return String(value);
+  }
+
+  const json = JSON.stringify(value);
+  return json.length > 120 ? `${json.slice(0, 117)}...` : json;
 }
 
 function normalizeText(value) {
@@ -78,5 +148,6 @@ function normalizeText(value) {
 }
 
 module.exports = {
+  applyStateProposal,
   handleTrainerMessage
 };

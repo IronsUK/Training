@@ -60,7 +60,9 @@ async function generateCoachResponse({ message, state, logs }) {
 
   return {
     reply: parsed.reply.trim(),
-    action: parsed.action && typeof parsed.action === "object" ? parsed.action : null
+    proposedState: parsed.proposedState && typeof parsed.proposedState === "object"
+      ? parsed.proposedState
+      : null
   };
 }
 
@@ -71,11 +73,12 @@ function buildSystemPrompt() {
     "Ground every answer in the provided training state and session logs. Do not invent history or plan details that are not present.",
     "Training style: conservative progression, reps first, then tempo, pause, range of motion, unilateral work, rest control, and density.",
     "Default rotation: Push, Lower A, Pull, Lower B.",
-    "When the user mentions fatigue from running, padel, or tired legs, it is reasonable to swap from a planned lower session to the next upper-body session.",
-    "You may suggest a state-changing action only when the user is clearly asking to change the current plan.",
-    "Allowed action types are: none, switch_next_session.",
-    "If you use switch_next_session, choose a session name that exists in the provided rotation.",
-    "Return only JSON with this shape: {\"reply\": string, \"action\": {\"type\": \"none\"} | {\"type\": \"switch_next_session\", \"sessionName\": string, \"reason\": string}}"
+    "You may propose an updated full training-state JSON when the user is clearly asking to change the current or future plan, adapt to different equipment, or otherwise adjust training setup.",
+    "If no state change is needed, proposedState must be null.",
+    "If you propose a change, proposedState may be a partial JSON object containing only the fields that should change.",
+    "Do not include unchanged fields unless needed for clarity.",
+    "Keep changes focused on the user's request. Do not rewrite unrelated parts of the program.",
+    "Return only JSON with this shape: {\"reply\": string, \"proposedState\": object | null}"
   ].join(" ");
 }
 

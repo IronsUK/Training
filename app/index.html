@@ -50,6 +50,15 @@
           <button id="sendAssistantBtn" class="btn">Ask Trainer</button>
         </div>
         <p id="assistantStatus" class="subtle statusMessage"></p>
+        <div id="proposalCard" class="proposalCard hidden">
+          <p class="eyebrow">Proposed State Update</p>
+          <p class="subtle">Review the diff before applying it.</p>
+          <pre id="proposalDiff" class="proposalDiff"></pre>
+          <div class="actions">
+            <button id="applyProposalBtn" class="btn">Apply Proposed Update</button>
+            <button id="discardProposalBtn" class="btn secondary">Discard</button>
+          </div>
+        </div>
       </section>
 
       <section id="previewCard" class="card hidden">

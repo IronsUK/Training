@@ -13,10 +13,6 @@ function validateStatePayload(payload) {
   if (!payload || typeof payload !== "object") {
     throw new Error("State payload must be a JSON object.");
   }
-
-  if (!payload.status?.next_session || !payload.next_targets) {
-    throw new Error("State payload must include status.next_session and next_targets.");
-  }
 }
 
 async function getCurrentState() {

@@ -11,12 +11,14 @@ const appState = {
   restSecondsLeft: 0,
   lastRestType: null,
   lastLogOutput: "",
-  audioContext: null
+  audioContext: null,
+  pendingProposal: null
 };
 
 const API_STATE_PATH = "/api/state/current";
 const API_SESSION_LOG_PATH = "/api/session-log";
 const API_ASSISTANT_CHAT_PATH = "/api/assistant/chat";
+const API_ASSISTANT_APPLY_PROPOSAL_PATH = "/api/assistant/apply-proposal";
 const DEFAULT_STATE_PATHS = [API_STATE_PATH, "./data/current-state.json", "../state/current-state.json"];
 
 const refs = {
@@ -30,6 +32,10 @@ const refs = {
   assistantInput: document.getElementById("assistantInput"),
   sendAssistantBtn: document.getElementById("sendAssistantBtn"),
   assistantStatus: document.getElementById("assistantStatus"),
+  proposalCard: document.getElementById("proposalCard"),
+  proposalDiff: document.getElementById("proposalDiff"),
+  applyProposalBtn: document.getElementById("applyProposalBtn"),
+  discardProposalBtn: document.getElementById("discardProposalBtn"),
   betweenExerciseRest: document.getElementById("betweenExerciseRest"),
   beepToggle: document.getElementById("beepToggle"),
   autoLoadBtn: document.getElementById("autoLoadBtn"),
@@ -480,6 +486,18 @@ function setAssistantStatus(message, isError = false) {
   setStatusMessage(refs.assistantStatus, message, isError);
 }
 
+function showProposal(diffText, proposedState) {
+  appState.pendingProposal = proposedState;
+  refs.proposalDiff.textContent = diffText || "No diff returned.";
+  refs.proposalCard.classList.remove("hidden");
+}
+
+function clearProposal() {
+  appState.pendingProposal = null;
+  refs.proposalDiff.textContent = "";
+  refs.proposalCard.classList.add("hidden");
+}
+
 function ingestStateObject(stateObj) {
   const parsed = parseExercisesFromState(stateObj);
   appState.rawState = stateObj;
@@ -598,12 +616,7 @@ function applyAssistantState(stateObj) {
     return;
   }
 
-  if (refs.workoutCard.classList.contains("hidden")) {
-    ingestStateObject(stateObj);
-  } else {
-    appState.rawState = stateObj;
-    refs.saveStateBtn.disabled = false;
-  }
+  ingestStateObject(stateObj);
 }
 
 async function sendAssistantMessage() {
@@ -627,17 +640,49 @@ async function sendAssistantMessage() {
     });
 
     appendAssistantMessage("assistant", response.reply || "No reply returned.");
-    if (response.stateChanged && response.state) {
-      applyAssistantState(response.state);
-      setSetupMessage("Training state updated by the trainer assistant.");
+    if (response.proposedState) {
+      showProposal(response.diffText, response.proposedState);
+      setAssistantStatus("Trainer proposed a state update. Review the diff below.");
+    } else {
+      clearProposal();
+      setAssistantStatus("");
     }
-    setAssistantStatus("");
   } catch (err) {
     appendAssistantMessage("assistant", `I hit a problem: ${err.message}`);
     setAssistantStatus(err.message, true);
   } finally {
     refs.sendAssistantBtn.disabled = false;
     refs.assistantInput.focus();
+  }
+}
+
+async function applyPendingProposal() {
+  if (!appState.pendingProposal) {
+    return;
+  }
+
+  refs.applyProposalBtn.disabled = true;
+  setAssistantStatus("Applying proposed update...");
+
+  try {
+    const response = await requestJson(API_ASSISTANT_APPLY_PROPOSAL_PATH, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ proposedState: appState.pendingProposal })
+    });
+
+    applyAssistantState(response.state);
+    clearProposal();
+    appendAssistantMessage("assistant", "I applied the proposed workout update.");
+    setSetupMessage("Training state updated from the approved proposal.");
+    setAssistantStatus("");
+  } catch (err) {
+    appendAssistantMessage("assistant", `I could not apply that update: ${err.message}`);
+    setAssistantStatus(err.message, true);
+  } finally {
+    refs.applyProposalBtn.disabled = false;
   }
 }
 
@@ -741,6 +786,11 @@ refs.copyLogBtn.addEventListener("click", async () => {
 
 refs.saveLogBtn.addEventListener("click", saveLogToCloud);
 refs.sendAssistantBtn.addEventListener("click", sendAssistantMessage);
+refs.applyProposalBtn.addEventListener("click", applyPendingProposal);
+refs.discardProposalBtn.addEventListener("click", () => {
+  clearProposal();
+  setAssistantStatus("Proposed update discarded.");
+});
 refs.assistantInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();

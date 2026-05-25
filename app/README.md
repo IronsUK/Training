@@ -68,6 +68,7 @@ Current endpoints:
 - `GET /api/session-log`
 - `GET /api/session-log/search`
 - `POST /api/assistant/chat`
+- `POST /api/assistant/apply-proposal`
 
 The intended storage model is Azure Blob Storage.
 
@@ -91,6 +92,23 @@ If Azure OpenAI is not configured yet:
 
 - trainer chat requests will fail with a clear configuration error
 - the chat UI is present, but the assistant is not usable until the model settings are added
+
+## Assistant proposal flow
+
+The trainer assistant now works as a proposal flow:
+
+1. the app sends your message to `POST /api/assistant/chat`
+2. the LLM returns a natural-language reply and, when needed, a full proposed state JSON
+3. the backend returns a readable diff summary
+4. the app shows the diff and lets you explicitly apply or discard it
+5. if you approve it, the app sends the proposal to `POST /api/assistant/apply-proposal`
+
+Validation is intentionally lightweight:
+
+- the proposal must be valid JSON
+- the proposal must be a JSON object
+
+The visible diff is the main guardrail before applying the change.
 
 ## Historical log migration
 
