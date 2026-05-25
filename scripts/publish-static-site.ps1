@@ -14,6 +14,7 @@ New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
 Copy-Item (Join-Path $workspaceRoot "app\index.html") $outputRoot
 Copy-Item (Join-Path $workspaceRoot "app\app.js") $outputRoot
 Copy-Item (Join-Path $workspaceRoot "app\styles.css") $outputRoot
+Copy-Item (Join-Path $workspaceRoot "app\staticwebapp.config.json") $outputRoot
 Copy-Item (Join-Path $workspaceRoot "state\current-state.json") (Join-Path $dataDir "current-state.json")
 
 Write-Host "Published static site artifact to $outputRoot"

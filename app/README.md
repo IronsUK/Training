@@ -54,6 +54,24 @@ That creates `dist/static-site/` with:
 
 This keeps the hosted app self-contained without publishing the rest of the workspace.
 
+## Azure Static Web Apps
+
+This repository now includes a GitHub Actions workflow at `.github/workflows/azure-static-web-apps.yml`.
+
+The deploy flow is:
+
+1. GitHub Actions runs `scripts/publish-static-site.ps1`
+2. the workflow deploys `dist/static-site/` to Azure Static Web Apps
+3. the hosted app auto-loads `data/current-state.json`
+
+To finish the Azure setup:
+
+1. create an Azure Static Web App connected to this GitHub repository and the `main` branch
+2. add the deployment token to the repository as `AZURE_STATIC_WEB_APPS_API_TOKEN`
+3. push to `main` or run the workflow manually
+
+`app/staticwebapp.config.json` disables caching for the embedded state snapshot so state updates are picked up reliably after deployment.
+
 ## End of workout
 
 At the end:
