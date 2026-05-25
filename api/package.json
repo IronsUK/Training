@@ -5,7 +5,8 @@
   "description": "Azure Functions API for training state and session log storage.",
   "main": "src/functions/*.js",
   "scripts": {
-    "start": "func start"
+    "start": "func start",
+    "import:logs": "node ./scripts/import-existing-logs.js"
   },
   "dependencies": {
     "@azure/functions": "^4.7.3",

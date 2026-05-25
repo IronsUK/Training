@@ -65,6 +65,8 @@ Current endpoints:
 - `GET /api/state/current`
 - `PUT /api/state/current`
 - `POST /api/session-log`
+- `GET /api/session-log`
+- `GET /api/session-log/search`
 
 The intended storage model is Azure Blob Storage.
 
@@ -79,6 +81,26 @@ If blob storage is not configured yet:
 
 - the hosted app will still fall back to the deployed static state snapshot
 - cloud save actions will fail with a clear error message
+
+## Historical log migration
+
+The repository includes a one-time import script for the existing markdown logs in `logs/`.
+
+Run it from the repo root after configuring API storage settings locally:
+
+`node .\api\scripts\import-existing-logs.js`
+
+What it does:
+
+- reads markdown logs from `logs/`
+- parses them into a structured JSON shape
+- preserves the original markdown in each stored document
+- uploads them to the configured `training-logs` container
+
+Imported and newly-saved logs are queryable through:
+
+- `GET /api/session-log`
+- `GET /api/session-log/search?query=pull`
 
 ## Azure Static Web Apps
 

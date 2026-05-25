@@ -103,6 +103,7 @@ Current implementation slice:
 - manual cloud-save actions added for loaded state and generated logs
 - Azure Blob Storage wiring has been provisioned in Azure and seeded with the current state snapshot
 - code still needs to be pushed before the hosted app can use the new API path
+- historical markdown logs have been imported into blob storage
 
 Likely implementation options:
 
@@ -183,6 +184,9 @@ Known complexity:
 - update the frontend to save completed session results
 - define how workout logs will be queried in app
 - define the stored log shape needed for future AI retrieval and inspection
+- add a one-time historical log import from `logs/` into cloud storage
+- preserve original markdown and store structured JSON alongside it
+- flag logs that do not parse cleanly during migration
 
 ## Candidate First API Surface
 
@@ -219,6 +223,7 @@ After that:
 1. add a query path for recent and filtered workout logs
 2. ensure stored logs include enough structure for AI inspection
 3. add an assistant endpoint that retrieves current state and relevant logs before answering
+4. migrate the historical markdown logs so query and AI features have full training history
 
 ## Session Notes
 
@@ -231,3 +236,5 @@ After that:
 - Next architectural step identified: move state and logs behind a backend
 - Phase 2 implementation started with API-backed state and log endpoints
 - Storage account created and initial `current-state.json` uploaded to blob storage
+- Historical log migration and query endpoints added to the Phase 2 plan
+- Existing markdown logs imported into `training-logs` and validated through the new query layer
